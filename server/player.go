@@ -32,7 +32,7 @@ func (p *player) listen() {
 		}
 
 		if p.g == nil {
-			wlog("A player has sent a message without being assigned to a game.")
+			wlog("A player has sent a message without being assigned to a game.", p)
 			continue
 		}
 

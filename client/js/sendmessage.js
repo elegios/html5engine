@@ -17,33 +17,38 @@ var MAX_TIME_GAP = console.warn("you need to set the maximum time gap for sendme
 */
 
 function SendMessage() {
-  this.receivers = []
+	this.receivers = {}
 }
 
 SendMessage.prototype.connect = function(timekeeper) {
-  this.timekeeper = timekeeper
+	this.timekeeper = timekeeper
 }
 
-SendMessage.prototype.register = function(receiver) {
-  this.receivers.push(receiver)
+SendMessage.prototype.addListener = function(name, receiverFunc) {
+	if (!this.receivers[name])
+		this.receivers[name] = []
+
+	this.receivers[name].push(receiverFunc)
+}
+
+SendMessage.prototype.simpleAddListener = function(name, receiver) {
+	this.addListener(name, receiver[name].bind(receiver))
 }
 
 /*
-  time - the time from which the message is sent
-         if it is negative the message is always sent
-  name - the name of the function to be called
-  arg  - the argument to supply to the receiver
+	time - the time from which the message is sent
+				 if it is negative the message is always sent
+	name - the name of the function to be called
+	arg	- the argument to supply to the receiver
 */
 SendMessage.prototype.send = function(time, name, arg) {
-  if ((time < this.timekeeper.time - MAX_TIME_GAP || time > this.timekeeper.time) && time >= 0)
-    return
-  var received = false
-  this.receivers.forEach(function(receiver) {
-    if (typeof receiver[name] !== "function")
-      return
-    received = true
-    receiver[name].call(receiver, arg, this.timekeeper.time - time)
-  }, this)
-  if (!received)
-    console.warn("No receiver for message", name, arg)
+	if ((time < this.timekeeper.time - MAX_TIME_GAP || time > this.timekeeper.time) && time >= 0)
+		return
+	if (!this.receivers[name]) {
+		console.warn("No receiver for message", name, arg)
+		return
+	}
+	this.receivers[name].forEach(function(receiver) {
+		receiver(arg, time >= 0 ? this.timekeeper.time - time : -1)
+	}
 }
