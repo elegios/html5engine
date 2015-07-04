@@ -3,8 +3,9 @@
 function Input() {
 }
 
-Input.prototype.connect = function(timekeeper, send) {
+Input.prototype.connect = function(timekeeper, statekeeper, send) {
 	this.timekeeper = timekeeper
+	this.statekeeper = statekeeper
 	this.send = send
 }
 

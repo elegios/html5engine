@@ -39,7 +39,7 @@ var init
 		renderer.connect(ctx)
 		timeline.connect(send)
 		network.connect(socket, start)
-		input.connect(timeline, send)
+		input.connect(timeline, timeline, send)
 
 		network.addListener("event", function(e) { send(-1, "onAddedEvent", e) })
 		network.addListener("playerInfo", input.setPlayerInfo.bind(input))
