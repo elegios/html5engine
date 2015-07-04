@@ -11,10 +11,18 @@ function Timeline() {
 
 (function(){
 
-Timeline.prototype.connect = function(initState, send) {
+Timeline.prototype.connect = function(send) {
+	this.send = send
+}
+
+Timeline.prototype.setInitState = function(initState) {
+	if (this.currentState) {
+		console.warn("Attempted to set the initial state of the timeline multiple times")
+		return
+	}
+	console.log("Set the initial state")
 	this.states[0] = initState
 	this.currentState = initState
-	this.send = send
 }
 
 Timeline.prototype.tick = function(tickF) {
@@ -24,10 +32,11 @@ Timeline.prototype.tick = function(tickF) {
 		let nextI = index(this.dirtyTime+1)
 
 		this.states[nextI] = deepcopy(this.states[i])
-		tickF(this.dirtyTime+1, this.events[i], this.states[nextI], send)
+		tickF(this.dirtyTime+1, this.events[i], this.states[nextI], this.send)
 	}
 
-	this.events[index(this.time)] = []
+	let i = index(this.time)
+	this.events[i] = []
 	this.currentState = this.states[i]
 }
 

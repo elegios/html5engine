@@ -56,6 +56,12 @@ type identification struct {
 	Id int `json:"id"`
 }
 
+func (g *game) sendToAll(m string) {
+	for _, p := range g.players {
+		p.send(m)
+	}
+}
+
 // Passes the message on to all other players, but first makes sure
 // that no event has an id that is different from the sending player's
 // id.

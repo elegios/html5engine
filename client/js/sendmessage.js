@@ -50,5 +50,5 @@ SendMessage.prototype.send = function(time, name, arg) {
 	}
 	this.receivers[name].forEach(function(receiver) {
 		receiver(arg, time >= 0 ? this.timekeeper.time - time : -1)
-	}
+	})
 }

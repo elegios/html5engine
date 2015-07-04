@@ -9,7 +9,7 @@ Input.prototype.connect = function(timekeeper, send) {
 }
 
 Input.prototype.setPlayerInfo = function(info) {
-	this.playerId = info.id
+	this.playerId = info.playerId
 }
 
 Input.prototype.keydown = function(event) {

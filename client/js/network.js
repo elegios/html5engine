@@ -5,8 +5,8 @@ var LATENCY_MEMORY = (1 << 3) - 1
 function Network() {
 	this.listeners = []
 
-  var latencyMemory = []
-  var latencyIndex = 0
+  this.latencyMemory = []
+  this.latencyIndex = 0
 
 }
 
@@ -14,15 +14,16 @@ Network.prototype.connect = function(websocket, startFunction) {
 	if (!websocket)
 		return
 
+	this.queue = []
 	this.startFunction = startFunction
 	this.websocket = websocket
 
   websocket.onmessage = function(mess) {
     switch (mess.data) {
       case "pong":
-        latencyMemory[latencyIndex & LATENCY_MEMORY] = performance.now() - this.lastTime
-        latencyIndex++
-        if (latencyIndex > LATENCY_MEMORY) {
+        this.latencyMemory[this.latencyIndex & LATENCY_MEMORY] = performance.now() - this.lastTime
+        this.latencyIndex++
+        if (this.latencyIndex > LATENCY_MEMORY) {
           websocket.send("ready")
         } else {
           this.sendPing()
@@ -30,7 +31,7 @@ Network.prototype.connect = function(websocket, startFunction) {
         return
 
       case "start":
-        this.startFunction(latencyMemory.reduce(function(a, b) { return a + b }) / latencyMemory.length) // /
+        this.startFunction(this.latencyMemory.reduce(function(a, b) { return a + b }) / this.latencyMemory.length) // /
         return
 
       default:
@@ -40,7 +41,10 @@ Network.prototype.connect = function(websocket, startFunction) {
 }
 
 Network.prototype.addListener = function(mType, func) {
-	this.listeners[mType] = func
+	if (!this.listeners[mType])
+		this.listeners[mType] = []
+
+	this.listeners[mType].push(func)
 }
 
 Network.prototype.send = function(data, sendPlain) {
@@ -88,7 +92,7 @@ Network.prototype.onReceivedData = function(data) {
 		let t = d.mType
 		delete d.mType
 		if (net.listeners[t]) {
-			net.listeners[t](d)
+			net.listeners[t].forEach(function(f) { f(d) })
 		} else {
 			console.warn("Got data with no receiver", d)
 		}

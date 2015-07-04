@@ -1,5 +1,7 @@
 "use strict";
 
+var MS_PER_FRAME = 1000/60 // /
+
 var canvas
 
 var init
@@ -11,6 +13,7 @@ var init
 	var renderer
 	var timeline
 	var network
+	var input
 	var socket
 
 	var prevTime
@@ -34,12 +37,14 @@ var init
 
 		message.connect(timeline)
 		renderer.connect(ctx)
-		timeline.connect(makeInitState(), send)
+		timeline.connect(send)
 		network.connect(socket, start)
 		input.connect(timeline, send)
 
 		network.addListener("event", function(e) { send(-1, "onAddedEvent", e) })
 		network.addListener("playerInfo", input.setPlayerInfo.bind(input))
+		network.addListener("playerInfo", function(e) { timeline.setInitState(makeInitState(e)) })
+		network.addListener("playerInfo", network.sendPing.bind(network))
 
 		message.simpleAddListener("onAddedEvent", timeline)
 		message.simpleAddListener("onAddedLocalEvent", network)

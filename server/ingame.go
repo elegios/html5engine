@@ -5,7 +5,8 @@ import (
 )
 
 func (g *game) start() {
-	g.sendStartInfo()
+	log("Game: Full game, sending player info")
+	g.sendPlayerInfo()
 	for m := range g.messageChan {
 		switch m.mess {
 		case "ready":
@@ -25,15 +26,13 @@ func (g *game) startIfReady() {
 		}
 	}
 	log("Game: Everyone ready, starting")
-	for i, p := range g.players {
-		p.id = i
-		p.send("start")
-	}
+	g.sendToAll("start")
 }
 
-func (g *game) sendStartInfo() {
+func (g *game) sendPlayerInfo() {
 	count := strconv.Itoa(len(g.players))
-	for _, p := range g.players {
-		p.send("{\"playerCount\":" + count + ",\"playerId\":" + strconv.Itoa(p.id) + "}")
+	for i, p := range g.players {
+		p.id = i
+		p.send("{\"mType\":\"playerInfo\",\"playerCount\":" + count + ",\"playerId\":" + strconv.Itoa(p.id) + "}")
 	}
 }
