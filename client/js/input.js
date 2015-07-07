@@ -9,7 +9,7 @@ Input.prototype.connect = function(timekeeper, statekeeper, send) {
 	this.send = send
 }
 
-Input.prototype.setPlayerInfo = function(info) {
+Input.prototype.setStartInfo = function(info) {
 	this.playerId = info.playerId
 }
 

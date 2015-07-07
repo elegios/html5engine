@@ -42,9 +42,9 @@ var init
 		input.connect(timeline, timeline, send)
 
 		network.addListener("event", function(e) { send(-1, "onAddedEvent", e) })
-		network.addListener("playerInfo", input.setPlayerInfo.bind(input))
-		network.addListener("playerInfo", function(e) { timeline.setInitState(makeInitState(e)) })
-		network.addListener("playerInfo", network.sendPing.bind(network))
+		network.addListener("startInfo", input.setStartInfo.bind(input))
+		network.addListener("startInfo", function(e) { timeline.setInitState(makeInitState(e)) })
+		network.addListener("startInfo", network.sendPing.bind(network))
 
 		message.simpleAddListener("onAddedEvent", timeline)
 		message.simpleAddListener("onAddedLocalEvent", network)
