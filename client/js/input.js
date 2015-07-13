@@ -21,6 +21,7 @@ Input.prototype.keyup = function(event) {
 
 Input.prototype.addLocalEvent = function(event) {
 	event.id = this.playerId
+	event.time = this.timekeeper.time
 	this.send(this.timekeeper.time, "onAddedLocalEvent", event)
 	this.send(this.timekeeper.time, "onAddedEvent", event)
 }

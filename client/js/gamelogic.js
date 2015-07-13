@@ -1,6 +1,6 @@
 "use strict";
 
-function makeInitState(playerInfo) {
+function makeInitState(startInfo) {
 	let state = {}
 	console.warn("Implement the starting state of the game here")
 	return state

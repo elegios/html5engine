@@ -40,10 +40,12 @@ func (g *game) gatherPlayers(pChan chan *player) {
 	for {
 		select {
 		case p := <-pChan:
+			dlog("Got a new player")
 			g.add(p)
 			if g.isFull() {
 				spawnNewGame(pChan)
 				g.start()
+				return
 			}
 
 		case p := <-g.remChan:

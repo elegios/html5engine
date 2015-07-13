@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 
 var LATENCY_MEMORY = (1 << 3) - 1
 

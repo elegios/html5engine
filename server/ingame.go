@@ -7,13 +7,23 @@ import (
 func (g *game) start() {
 	log("Game: Full game, sending player info")
 	g.sendStartInfo()
-	for m := range g.messageChan {
-		switch m.mess {
-		case "ready":
-			g.startIfReady()
+	for {
+		select {
+		case m := <-g.messageChan:
+			switch m.mess {
+			case "ready":
+				g.startIfReady()
 
-		default:
-			g.sendToOthers(m)
+			default:
+				g.sendToOthers(m)
+			}
+
+		case p := <-g.remChan:
+			g.rem(p)
+			if len(g.players) == 0 {
+				log("Game: Empty, shutting it down")
+				return
+			}
 		}
 	}
 }

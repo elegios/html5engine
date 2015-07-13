@@ -45,6 +45,7 @@ var init
 		network.addListener("startInfo", input.setStartInfo.bind(input))
 		network.addListener("startInfo", function(e) { timeline.setInitState(makeInitState(e)) })
 		network.addListener("startInfo", network.sendPing.bind(network))
+		network.addListener("startInfo", renderer.setStartInfo.bind(renderer))
 
 		message.simpleAddListener("onAddedEvent", timeline)
 		message.simpleAddListener("onAddedLocalEvent", network)

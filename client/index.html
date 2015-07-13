@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Probending test game</title>
+	<title>HTML5 Engine</title>
 	<link rel="stylesheet" href="html5reset.css" media="screen"/>
 	<link rel="stylesheet" href="style.css" media="screen"/>
 </head>
@@ -18,6 +18,29 @@
 <script src="js/sendmessage.js" type="application/javascript;version=1.7"></script>
 <script src="js/timeline.js"    type="application/javascript;version=1.7"></script>
 <script src="js/util.js"        type="application/javascript;version=1.7"></script>
+<script>
+"use strict";
+
+(function () {
+if (typeof init !== 'undefined')
+	return
+
+[
+	"js/gamelogic.js",
+	"js/init.js",
+	"js/input.js",
+	"js/network.js",
+	"js/renderer.js",
+	"js/sendmessage.js",
+	"js/timeline.js",
+	"js/util.js",
+].forEach(function(src) {
+	var script = document.createElement('script')
+	script.src = src
+	document.body.appendChild(script)
+})
+})()
+</script>
 
 </html>
 

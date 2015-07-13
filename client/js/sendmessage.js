@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 
 var MAX_TIME_GAP = console.warn("you need to set the maximum time gap for sendmessage.js")
 //heavily inspired by SendMessage in Unity, might be useful to tie graphics to things
@@ -50,5 +50,5 @@ SendMessage.prototype.send = function(time, name, arg) {
 	}
 	this.receivers[name].forEach(function(receiver) {
 		receiver(arg, time >= 0 ? this.timekeeper.time - time : -1)
-	})
+	}, this)
 }

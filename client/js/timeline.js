@@ -36,7 +36,12 @@ Timeline.prototype.tick = function(tickF) {
 	}
 
 	let i = index(this.time)
-	this.events[i] = []
+	if (this.futureEvents[this.time]) {
+		this.events[i] = this.futureEvents[this.time]
+		delete this.futureEvents[this.time]
+	} else {
+		this.events[i] = []
+	}
 	this.currentState = this.states[i]
 }
 
@@ -44,7 +49,11 @@ Timeline.prototype.onAddedEvent = function(event) {
 	if (event.time <= this.time - TIMELINE_NUM_STATES) {
 		throw "Got an event that was too old"
 	} else if (event.time > this.time) {
-		console.warn("Got an event from the future, it won't be added", event)
+		if (!this.futureEvents[event.time])
+			this.futureEvents[event.time] = []
+
+		this.futureEvents[event.time].push(event)
+		return
 	}
 
 	this.events[index(event.time)].push(event)
